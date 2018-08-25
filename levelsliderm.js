@@ -170,6 +170,10 @@ function levelsliderm(vnode) {
           )
         ]
       )
+<<<<<<< HEAD
+    }
+=======
     } 
+>>>>>>> d870bdd... intialising io page
   }
 }
