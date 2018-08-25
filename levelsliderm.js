@@ -170,6 +170,6 @@ function levelsliderm(vnode) {
           )
         ]
       )
-    } 
+    }
   }
 }
