@@ -68,8 +68,8 @@ function levelsliderm(vnode) {
     knobstyle.cx='50%'
     knobtagstring ='circle[cy="'
     
-    elstyle.width="15em"
-    elstyle.height="15em"
+    elstyle.width="2.5em"
+    elstyle.height="10em"
     var c=max ; max=min ; min=c
         
   }
@@ -170,10 +170,6 @@ function levelsliderm(vnode) {
           )
         ]
       )
-<<<<<<< HEAD
     }
-=======
-    } 
->>>>>>> d870bdd... intialising io page
   }
 }
