@@ -1,89 +1,109 @@
+/*
+m( levelsliderm, { 
+   /// required parameters
+    stateobj: ... //scope of the slaved variable
+   ,statekey: ... //name of the slaved variable
+   ,min:0 ,max:100 //range of slaved variable
+   /// optional parameters
+   ,steps:100       //snap steps
+   ,reverse:false   //reverse the direction of control
+   ,vertical:true   //this makes vertical
+   ,horizontal:true //this is default
+   ,elstring:"#id.class" //add a string to tag for id or classes
+   ,elstyle:{            //css on element for size, bgcolor etc
+     margin:"1px" ,width:"2em" ,height:"10em" 
+   }
+   ,railcolora:"red"      //color of rail before knob
+   ,railcolorb:"#101010"  //color of rail after knob
+   ,knobcolor:"#999"
+   ,knobholdcolor:"#aaa"
+   ,thick:14          //thickness of rail (a percentage of svgs size)
+   ,onclickextra:fnc  //custom function to call on clicking knob
+} )
+
+*/
+
+function sswap(a,b,c){ var q=a[b];a[b]=a[c];a[c]=q }
+function mergeaintob(a,b){ for (var ky in a) { b[ky] = a[ky] } }
+ 
 function levelsliderm(vnode) {
 
   var stateobj = vnode.attrs.stateobj //scope to access slaved variable
   var statekey = vnode.attrs.statekey //symbol name of slaved variable
   var callback = vnode.attrs.callback //symbol name of slaved variable
 
-  var thick = vnode.attrs.thick||14  // thickness of rail
+  var thick = vnode.attrs.thick||16  // thickness of rail
   var min = vnode.attrs.min        // min value of variable
   var max = vnode.attrs.max        // max value of variable
-  var setting = (stateobj[statekey]-min)/(max-min) // current setting 
-  var subfrac = vnode.attrs.steps||4294967296
-  var xpos = (Math.round(subfrac*(5+setting*90))/subfrac)+"%"
-  var mouseisdown = false
+  var steps = vnode.attrs.steps||4294967296
+  var setting = (stateobj[statekey]-min)/(max-min) 
+  var reverse = vnode.attrs.reverse 
+  var horizontal = vnode.attrs.horizontal
+  if (horizontal===undefined) horizontal=(!vnode.attrs.vertical)
+  if(!horizontal) reverse=!reverse
+  
   var onclickextra = vnode.attrs.onclickextra
-  var knobpos
- 
-  var knobstyle={ 
-    border:"1px solid black",
-    fill:"white",
-    r:"4.5%"
-  }
+
+  var strokecolor=vnode.attrs.strokecolor||"dimgrey"
+  var knobstrokecolor=vnode.attrs.knobstrokecolor||strokecolor
+  var strokewidth=vnode.attrs.strokewidth||"0.8%"
+  var knobstrokewidth=vnode.attrs.knobstrokewidth||strokewidth
+  var knobcolor=vnode.attrs.knobcolor||"LightSteelBlue"
+  var knobsize=vnode.attrs.knobsize||"5.5%"
   
-  var horizontal = vnode.attrs.horizontal||(!vnode.attrs.vertical)
+  var knobtribs={ fill:knobcolor,stroke:knobstrokecolor,"stroke-width":strokewidth,r:knobsize }
   
-  var elstyle = { 
-    padding:0, border:"1px solid black"
-   ,margin:"1em", position:"relative"
+  var elstyle = { width:"10em",height:"2.5em" }
+  if(!horizontal) sswap(elstyle,'width','height')
+   
+  var railtribsa ={ fill: 'LightSeaGreen',stroke:strokecolor,"stroke-width":strokewidth }
+  var railtribsb ={ fill: 'LightSKyBlue',stroke:strokecolor,"stroke-width":strokewidth }
+    
+  if(reverse) {
+    var c=railtribsa.fill
+    railtribsa.fill=railtribsb.fill ; railtribsb.fill= c
   }
-    
-  var railstylea ={ fill: 'darkgrey' }
-  var railstyleb ={ fill: 'grey' }
-    
   var railtagstringa, railtagstringb, railtagstringc, knobtagstring
    
   if(horizontal){ 
     
-    railstylea.x      = "5%" //horizontal rail draws from 5% to 95% 
-    railstylea.y      = railstyleb.y      = (50-thick/2)+"%" 
-    railstylea.height = railstyleb.height = thick+"%" 
+    railtribsa.x      = "5%" //horizontal rail draws from 5% to 95% 
+    railtribsa.y      = railtribsb.y      = (50-thick/2)+"%" 
+    railtribsa.height = railtribsb.height = thick+"%" 
 
-    railstylea.rx     = railstyleb.rx     = "1.1%"  //round edges of rectangle
-    railstylea.ry     = railstyleb.ry     = "7.5%" 
+    railtribsa.rx     = railtribsb.rx     = "1.1%"  //round edges of rectangle
+    railtribsa.ry     = railtribsb.ry     = "7.5%" 
     
     railtagstringa='rect[width="'
-    railtagstringb='%"][x="'
-    railtagstringc='%"]'
-    knobstyle.cy='50%'
+    knobtribs.cy='50%'
     knobtagstring ='circle[cx="'
-    
-    elstyle.width="10em"
-    elstyle.height="2em"
 
   }else{
     
-    railstylea.y      = "5%" //horizontal rail draws from 5% to 95% 
-    railstylea.x      = railstyleb.x      = (50-thick/2)+"%" 
-    railstylea.width = railstyleb.width   = thick+"%" 
+    railtribsa.y      = "5%" //horizontal rail draws from 5% to 95% 
+    railtribsa.x      = railtribsb.x      = (50-thick/2)+"%" 
+    railtribsa.width  = railtribsb.width   = thick+"%" 
 
-    railstylea.ry     = railstyleb.ry     = "1.1%"  //round edges of rectangle
-    railstylea.rx     = railstyleb.rx     = "7.5%" 
-    
-    railstylea.fill = 'grey'
-    railstyleb.fill = 'darkgrey'
-    
+    railtribsa.ry     = railtribsb.ry     = "1.1%"  //round edges of rectangle
+    railtribsa.rx     = railtribsb.rx     = "7.5%" 
+        
     railtagstringa='rect[height="'
-    railtagstringb='%"][y="'
-    railtagstringc='%"]'
-    knobstyle.cx='50%'
+    knobtribs.cx='50%'
     knobtagstring ='circle[cy="'
     
-    elstyle.width="15em"
-    elstyle.height="15em"
-    var c=max ; max=min ; min=c
-        
+    sswap(this,'min','max') 
   }
   
-  function mergeaintob(a,b){ for (var ky in a) { b[ky] = a[ky] } }
-  
   mergeaintob( vnode.attrs.elstyle, elstyle )
+
+  var xpos = (Math.round(steps*(5+setting*90))/steps)+"%"
+  var mouseisdown = false
+  var knobpos
   
-  //https://stackoverflow.com/questions/3944122/detect-left-mouse-button-press 
-  function detectLeftButton(evt) {
+  function detectleftbutton(evt) {
     evt = evt || window.event
     if ("buttons" in evt) return evt.buttons == 1
-    var button = evt.which || evt.button
-    return button == 1
+    return (evt.which || evt.button) == 1
   }
 
   function mousedown(e) {
@@ -97,7 +117,7 @@ function levelsliderm(vnode) {
   
   function adjust(e) {
     
-    if(!(mouseisdown||detectLeftButton(e))) return true
+    if(!(mouseisdown||detectleftbutton(e))) return true
     mouseisdown = false
     
     var mx=e.clientX, my=e.clientY
@@ -115,6 +135,7 @@ function levelsliderm(vnode) {
       bpos=xpos
     }
     
+    if(reverse) cpos=1-cpos
     if(cpos<-0.025||cpos>1.025) return true
     if(!(bpos>bborder&&bpos<1-bborder)) return true
     
@@ -124,7 +145,7 @@ function levelsliderm(vnode) {
       return false //do callback and return if finnished
     }
     
-    cpos=Math.round(subfrac*cpos)/subfrac
+    cpos=Math.round(steps*cpos)/steps
     stateobj[statekey]=(min+ cpos*(max-min))
     
     return false
@@ -147,7 +168,14 @@ function levelsliderm(vnode) {
     view: function(vnode) {
       
       var knobpos=((stateobj[statekey]-min)/(max-min)*90)
+      if(reverse) knobpos=90-knobpos
       
+      if(horizontal){ 
+        railtribsb.x = (knobpos+5)+"%"
+      }else{
+        railtribsb.y = (knobpos+5)+"%"
+      }	
+
       return m('svg', 
         { 
           onclick:onclickextra,
@@ -159,14 +187,14 @@ function levelsliderm(vnode) {
         [
           m(
             railtagstringa+knobpos+'%"]"', 
-            railstylea 
+            railtribsa 
           ),
             
-          m(railtagstringa +(90-knobpos)+ railtagstringb +(knobpos+5)+ railtagstringc, 
-            railstyleb ),
+          m(railtagstringa +(90-knobpos)+'%"]"', 
+            railtribsb ),
              
           m(knobtagstring+(5+knobpos)+'%"]"',
-            knobstyle
+            knobtribs
           )
         ]
       )
