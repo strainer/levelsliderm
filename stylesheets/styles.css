@@ -25,17 +25,6 @@ time, mark, audio, video {
 
 /* Base text styles */
 
-body {
-  /*padding:10px 10px 0 0;*/
-  font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 14px;
-	color: #000;
-	background-color: #89f;
-	margin: 0;
-	line-height: 1.8em;
-	-webkit-font-smoothing: antialiased;
-
-}
 
 h1, h2, h3, h4, h5, h6 {
   color:#232323;
