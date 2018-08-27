@@ -20,7 +20,7 @@ m( levelsliderm, {
    ,min:0 ,max:100 
 } )
 
-//more option properties available:
+//more properties are arranged:
 
 m( levelsliderm, { 
 	 /* required parameters */
@@ -38,11 +38,17 @@ m( levelsliderm, {
 	 }
    ,railcolora:"red"      //color of rail before knob
    ,railcolorb:"#101010"  //color of rail after knob
-   ,knobcolor:"#999"
-   ,knobholdcolor:"#aaa"
    ,thick:14          //thickness of rail (a percentage of svgs size)
+   ,horizontal:false
+   ,strokewidth:"0.8%"
+   ,strokecolor:"dimgrey"
+   ,knobstrokewidth:"0.8%"
+   ,knobstrokecolor:"#171757"
+   ,knobsize:"4.9%"
+   ,knobcolor:"#02b"   
+   ,knobholdcolor:"#aaa"
    ,onclickextra:fnc  //custom function to call on clicking knob
 } )
 ```
 
-Version 1.0.0-rc
+Version 1.0.0-beta
