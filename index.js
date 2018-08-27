@@ -13,7 +13,7 @@ var s ={
  ,strokecolor:"dimgrey"
  ,knobstrokecolor:"#171757"
  ,strokewidth:"0.8%"
- ,knobstrokewidth:"0.8%"
+ ,knobstrokewidth:"1.2%"
 
 }
 
@@ -28,6 +28,7 @@ s.reverse=false
 b=document.createElement("div")
 d.appendChild(b)
 
+
 s.horizontal=true
 s.elstyle.width=swide;
 s.elstyle.height=slength;
@@ -35,6 +36,7 @@ s.elstyle.height=slength;
 for(var i=0;i<4;i++) appendslider(s,b)
 s.reverse=true
 s.elstyle.height="1.6em"
+s.knobsize="3.5%"
 for(var i=0;i<12;i++) appendslider(s,b)
 s.reverse=false
 s.steps=1

@@ -51,7 +51,7 @@ function levelsliderm(vnode) {
   var knobcolor=vnode.attrs.knobcolor||"LightSteelBlue"
   var knobsize=vnode.attrs.knobsize||"5.5%"
   
-  var knobtribs={ fill:knobcolor,stroke:knobstrokecolor,"stroke-width":strokewidth,r:knobsize }
+  var knobtribs={ fill:knobcolor,stroke:knobstrokecolor,"stroke-width":knobstrokewidth,r:knobsize }
   
   var elstyle = { width:"10em",height:"2.5em" }
   if(!horizontal) sswap(elstyle,'width','height')
@@ -74,9 +74,9 @@ function levelsliderm(vnode) {
     railtribsa.rx     = railtribsb.rx     = "1.1%"  //round edges of rectangle
     railtribsa.ry     = railtribsb.ry     = "7.5%" 
     
-    railtagstringa='rect[width="'
+    railtagstringa='rect[width='
     knobtribs.cy='50%'
-    knobtagstring ='circle[cx="'
+    knobtagstring ='circle[cx='
 
   }else{
     
@@ -87,9 +87,9 @@ function levelsliderm(vnode) {
     railtribsa.ry     = railtribsb.ry     = "1.1%"  //round edges of rectangle
     railtribsa.rx     = railtribsb.rx     = "7.5%" 
         
-    railtagstringa='rect[height="'
+    railtagstringa='rect[height='
     knobtribs.cx='50%'
-    knobtagstring ='circle[cy="'
+    knobtagstring ='circle[cy='
     
     sswap(this,'min','max') 
   }
@@ -186,14 +186,14 @@ function levelsliderm(vnode) {
         },
         [
           m(
-            railtagstringa+knobpos+'%"]"', 
+            railtagstringa+knobpos+'%]', 
             railtribsa 
           ),
             
-          m(railtagstringa +(90-knobpos)+'%"]"', 
+          m(railtagstringa +(90-knobpos)+'%]', 
             railtribsb ),
              
-          m(knobtagstring+(5+knobpos)+'%"]"',
+          m(knobtagstring+(5+knobpos)+'%]',
             knobtribs
           )
         ]
