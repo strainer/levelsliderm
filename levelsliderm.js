@@ -1,3 +1,23 @@
+function ccomponent(vnode) {
+  
+  var ook
+  
+  
+  return {	
+    oninit: function(vnode) { ook=vnode.attrs.stateobj[vnode.attrs.statekey];vnode.state.ook=ook  },
+
+    view: function(vnode) {
+      return [
+        m("div", {style: {height:"1em", width:2+vnode.attrs.stateobj[vnode.attrs.statekey]+"em", backgroundColor:"red"} } ),
+        //m("div", {style: {display:"none"}},ook )
+      ]
+    }
+    
+  }
+  
+}
+
+
 function levelsliderm(vnode) {
 
   var stateobj = vnode.attrs.stateobj //scope to access slaved variable
@@ -148,6 +168,12 @@ function levelsliderm(vnode) {
       
       var knobpos=((stateobj[statekey]-min)/(max-min)*90)
       
+      if(horizontal){ 
+        railstyleb.x = (knobpos+5)+"%"
+      }else{
+        railstyleb.y = (knobpos+5)+"%"
+      }	
+
       return m('svg', 
         { 
           onclick:onclickextra,
@@ -162,7 +188,7 @@ function levelsliderm(vnode) {
             railstylea 
           ),
             
-          m(railtagstringa +(90-knobpos)+ railtagstringb +(knobpos+5)+ railtagstringc, 
+          m(railtagstringa +(90-knobpos)+'%"]"', 
             railstyleb ),
              
           m(knobtagstring+(5+knobpos)+'%"]"',
