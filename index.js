@@ -9,12 +9,12 @@ var s ={
  ,elstyle:{ border:"0px dashed black",width:slength,height:swide,float:"left" }
  ,horizontal:false
  ,knobsize:"4.9%"
- ,knobcolor:"grey"
+ ,knobcolor:"#02b"
  ,strokecolor:"dimgrey"
- ,knobstrokecolor:"black"
+ ,knobstrokecolor:"#171757"
  ,strokewidth:"0.8%"
  ,knobstrokewidth:"0.8%"
- 
+
 }
 
 var d=document.getElementById("dash")
@@ -37,7 +37,12 @@ s.reverse=true
 s.elstyle.height="1.6em"
 for(var i=0;i<12;i++) appendslider(s,b)
 s.reverse=false
-for(var i=0;i<6;i++) appendslider(s,b)
+s.steps=1
+for(var i=0;i<2;i++) appendslider(s,b)
+s.steps=2
+for(var i=0;i<2;i++) appendslider(s,b)
+s.steps=8
+for(var i=0;i<2;i++) appendslider(s,b)
 
 function appendslider(s,e){ 
   var b = document.createElement("div")
