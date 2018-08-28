@@ -57,12 +57,13 @@ function levelsliderm(vnode) {
   var elstyle = { width:"10em",height:"2.5em" }
   if(!horizontal) sswap(elstyle,'width','height')
    
-  var railtribsa ={ fill: 'LightSeaGreen',stroke:strokecolorb,"stroke-width":strokewidth }
-  var railtribsb ={ fill: 'LightSKyBlue',stroke:strokecolor,"stroke-width":strokewidth }
+  var railtribsa ={ fill: 'LightSeaGreen',stroke:strokecolor,"stroke-width":strokewidth }
+  var railtribsb ={ fill: 'LightSKyBlue',stroke:strokecolorb,"stroke-width":strokewidth }
     
   if(reverse) {
     var c=railtribsa.fill
     railtribsa.fill=railtribsb.fill ; railtribsb.fill= c
+    railtribsa.stroke=strokecolorb ;railtribsb.stroke = strokecolor
   }
   var railtagstringa, railtagstringb, railtagstringc, knobtagstring
    
@@ -122,18 +123,16 @@ function levelsliderm(vnode) {
     
     if(k==="ArrowRight") c++ //||k==="ArrowUp"
     if(k==="ArrowLeft") c-- //||k==="ArrowDown"
+    if(c===0) return true  //let browser handle key
 
-    if(c===0) return true
-
-    var step = 1/steps
+    var step = (steps>16)?(1/16):(1/steps)
+ 
     var cpos = (stateobj[statekey]-min)/(max-min)
     
-    //move by step and a little more in case step is tiny
-    cpos+= c*(step+0.05)*((reverse^horizontal)?1:-1) 
-    cpos = Math.round(steps*cpos)/steps
+    cpos+= c*step*((reverse^horizontal)?1:-1) 
     cpos = cpos<0?0:cpos>1?1:cpos
- 
     stateobj[statekey]=(min+ cpos*(max-min))
+    
     return false
   }
   
