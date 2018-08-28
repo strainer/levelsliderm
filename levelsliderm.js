@@ -45,6 +45,7 @@ function levelsliderm(vnode) {
   var onclickextra = vnode.attrs.onclickextra
 
   var strokecolor=vnode.attrs.strokecolor||"dimgrey"
+  var strokecolorb=vnode.attrs.strokecolorb||"grey"
   var knobstrokecolor=vnode.attrs.knobstrokecolor||strokecolor
   var strokewidth=vnode.attrs.strokewidth||"0.8%"
   var knobstrokewidth=vnode.attrs.knobstrokewidth||strokewidth
@@ -56,7 +57,7 @@ function levelsliderm(vnode) {
   var elstyle = { width:"10em",height:"2.5em" }
   if(!horizontal) sswap(elstyle,'width','height')
    
-  var railtribsa ={ fill: 'LightSeaGreen',stroke:strokecolor,"stroke-width":strokewidth }
+  var railtribsa ={ fill: 'LightSeaGreen',stroke:strokecolorb,"stroke-width":strokewidth }
   var railtribsb ={ fill: 'LightSKyBlue',stroke:strokecolor,"stroke-width":strokewidth }
     
   if(reverse) {
@@ -111,8 +112,29 @@ function levelsliderm(vnode) {
     return adjust(e)
   }
   
-  function onclickex(e) {
+  function clickextra(e) {
     return onclickextra(e)
+  }
+
+  function keydown(e) {
+    //console.log("key:",e.key)
+    var c=0,k=e.key
+    
+    if(k==="ArrowRight") c++ //||k==="ArrowUp"
+    if(k==="ArrowLeft") c-- //||k==="ArrowDown"
+
+    if(c===0) return true
+
+    var step = 1/steps
+    var cpos = (stateobj[statekey]-min)/(max-min)
+    
+    //move by step and a little more in case step is tiny
+    cpos+= c*(step+0.05)*((reverse^horizontal)?1:-1) 
+    cpos = Math.round(steps*cpos)/steps
+    cpos = cpos<0?0:cpos>1?1:cpos
+ 
+    stateobj[statekey]=(min+ cpos*(max-min))
+    return false
   }
   
   function adjust(e) {
@@ -141,6 +163,7 @@ function levelsliderm(vnode) {
     
     cpos=cpos<0?0:cpos>1?1:cpos
     
+    vnode.dom.focus()
     if(callback && !callback(cpos)){
       return false //do callback and return if finnished
     }
@@ -178,7 +201,9 @@ function levelsliderm(vnode) {
 
       return m('svg', 
         { 
-          onclick:onclickextra,
+          tabindex:0,
+          onkeydown:keydown,
+          onclick:clickextra,
           onmousedown:mousedown,
           onmousemove:adjust,
           ondragstart:()=>false,
